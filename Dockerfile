@@ -1,9 +1,11 @@
 FROM oven/bun:alpine AS builder
 
 WORKDIR /app
-COPY . /app/
+COPY package.json bun.lock /app/
 
 RUN bun i
+
+COPY . /app/
 RUN bun tailwindcss -i main.css -o twout.css && bun postcss twout.css -o assets/styles.css && rm twout.css
 RUN bun build --outfile out.js --target bun index.tsx
 
