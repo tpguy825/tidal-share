@@ -171,7 +171,7 @@ function BaseStreamingService({
 	return (
 		<div class="overflow-clip px-4 hover:overflow-visible">
 			<a
-				class="stream-link relative z-10 flex h-16 rounded-xl border select-none hover:cursor-pointer"
+				class="stream-link relative z-10 flex h-16 rounded-lg border select-none hover:cursor-pointer"
 				href={url}
 				target="_blank">
 				<div
