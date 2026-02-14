@@ -124,7 +124,7 @@ app.get("/*", async ({ path, status }) => {
 									url={"https://tidal.com/track/" + ids[0]}
 									name="Tidal"
 									svgurl="/assets/tidal.svg"
-									shadowcolour="240,240,240"
+									shadowcolour="220,220,220"
 								/>
 								{streams["spotify"] ? (
 									<BaseStreamingService
