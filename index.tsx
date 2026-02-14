@@ -13,7 +13,11 @@ for (const f of ["styles.css", "tidal.svg", "amazon.svg", "spotify.svg", "apple.
 app.get("/*", async ({ path, status }) => {
 	console.log(path, path.substring(1).split("/").map(Number));
 
-	const ids = path.substring(1).split("/").map(Number).filter(Number.isSafeInteger);
+	const ids = path
+		.split("/")
+		.map(Number)
+		.filter(Number.isSafeInteger)
+		.filter((t) => t > 0);
 	if (ids.length != 1) return status(400, "Invalid ID");
 	else {
 		try {
@@ -177,6 +181,9 @@ app.get("/*", async ({ path, status }) => {
 						</div>
 					</div>
 				</body>,
+				<title safe>
+					{attrs.title} - {artists.map((t) => t.attributes.name).join(", ")}
+				</title>,
 			);
 		} catch (e) {
 			console.error(e);
