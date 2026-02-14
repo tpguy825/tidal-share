@@ -75,7 +75,7 @@ app.get("/*", async ({ path, status }) => {
 								{attrs.title}
 							</h1>
 							<h2 class="z-10 mx-auto text-lg mb-4" safe>
-								{artists.map((t) => t.attributes.name).join(", ")}
+								{artists.map((t) => <a href={"https://tidal.com/artist/" + t.id}>{t.attributes.name}</a>)}
 							</h2>
 						</div>
 						<div class="overflow-clip rounded-lg border w-full mb-4 md:h-[446px]">
@@ -135,7 +135,7 @@ app.get("/*", async ({ path, status }) => {
 			);
 		} catch (e) {
 			console.error(e);
-			return status(400, "Invalid ID");
+			return status(400, "Invalid ID - only songs are allowed");
 		}
 	}
 });

@@ -1,15 +1,8 @@
 # tidal-share
 
-To install dependencies:
+Tidal feature.fm share link viewer (songs only)
 
-```bash
-bun install
-```
+Works without JS and on slow internet connections
 
-To run:
-
-```bash
-bun run 
-```
-
-This project was created using `bun init` in bun v1.3.8. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+Example:
+<https://tidal.com/track/58990486/u> -> <https://tidal.tpgy.uk/track/58990486/u>
