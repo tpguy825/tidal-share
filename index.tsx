@@ -3,7 +3,7 @@ import { get, getToken } from "./tidal-share";
 import { base } from "./_utils";
 import type { IncludedAlbum, IncludedArtist, IncludedArtworks } from "./types";
 
-await Bun.$`bash css.sh`;
+// await Bun.$`bash css.sh`;
 
 const app = new Elysia().get("/", "Add a TIDAL song ID to the url to use this service.");
 
