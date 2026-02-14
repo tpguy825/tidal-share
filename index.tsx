@@ -3,7 +3,7 @@ import { get, getToken } from "./tidal-share";
 import { base } from "./_utils";
 import type { IncludedAlbum, IncludedArtist, IncludedArtworks } from "./types";
 
-// await Bun.$`bash css.sh`;
+await Bun.$`bash css.sh`;
 
 const app = new Elysia().get("/", "Add a TIDAL song ID to the url to use this service.");
 
@@ -42,9 +42,13 @@ app.get("/*", async ({ path, status }) => {
 
 			if (!artworks || !artists || !albums) throw new Error("Incomplete response! ID: " + ids[0]);
 
-			const cover = artworks.attributes.files.sort(
-				(b, a) => a.meta.height * a.meta.width - b.meta.height * b.meta.width,
-			)[0]?.href;
+			const covers = artworks.attributes.files
+				.sort((b, a) => a.meta.height * a.meta.width - b.meta.height * b.meta.width)
+				.map((t) => [t.href, t.meta.height * t.meta.width] as const);
+
+			const [cover, previewcover] = [covers[0]!, covers.filter(([, t]) => t >= 288 * 288).pop()];
+
+			if (!cover || !previewcover) throw new Error("Incomplete response - covers not found - ID: " + ids[0]);
 
 			const streams: Record<string, string> = {};
 
@@ -54,16 +58,25 @@ app.get("/*", async ({ path, status }) => {
 				}
 			}
 
+			function artistcommas(els: JSX.Element[]) {
+				if (els.length == 1) return els;
+				return els.reduce<JSX.Element[]>(
+					(pre, cur, i) => (i == 0 ? [cur] : [...pre, <span>, </span>, cur]),
+					[],
+				);
+			}
+
 			return base(
 				<body class="flex h-screen w-full py-4 md:py-0 flex-col">
 					<div class="flex m-auto flex-col md:flex-row max-w-96 md:max-w-none gap-8 md:columns-2">
 						<div class="flex flex-col rounded-lg border md:min-w-96 md:w-96 w-80 min-w-80 md:h-[446px]">
-							<a href={cover}>
+							<a href={cover[0]}>
 								<img
-									src={cover}
+									src={previewcover[0]}
 									alt="Album cover"
 									height="288"
 									width="288"
+									title="Click for the high resolution album cover"
 									style={
 										"box-shadow: 0px 0px 100px 24px " +
 										artworks.attributes.visualMetadata.selectedPaletteColor
@@ -71,11 +84,26 @@ app.get("/*", async ({ path, status }) => {
 									class="rounded-lg md:mx-12 md:mt-12 m-4"
 								/>
 							</a>
-							<h1 class="z-10 mx-auto mb-1 max-w-64 text-center text-2xl font-bold wrap-normal" safe>
+							<h1
+								class={
+									"z-10 mx-auto mb-1 max-w-72 w-72 text-center font-bold wrap-normal " +
+									(attrs.title.length > 20
+										? attrs.title.length > 35
+											? "text-lg -mt-1"
+											: "text-xl -mt-0.5"
+										: "text-2xl")
+								}
+								safe>
 								{attrs.title}
 							</h1>
-							<h2 class="z-10 mx-auto text-lg mb-4" safe>
-								{artists.map((t) => <a href={"https://tidal.com/artist/" + t.id}>{t.attributes.name}</a>)}
+							<h2 class="z-10 mx-auto text-lg mb-4">
+								{...artistcommas(
+									artists.map((t) => (
+										<a href={"https://tidal.com/artist/" + t.id} class="hover:underline" safe>
+											{t.attributes.name}
+										</a>
+									)),
+								)}
 							</h2>
 						</div>
 						<div class="overflow-clip rounded-lg border w-full mb-4 md:h-[446px]">
