@@ -204,4 +204,3 @@ function link(l: ExternalLink) {
 
 	return ` - ${name}: ${l.href}`;
 }
-
