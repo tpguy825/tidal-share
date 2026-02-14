@@ -1,0 +1,6 @@
+services:
+    tidal-share:
+        build: .
+        ports:
+            - 38483:38483
+        container_name: tidal-share

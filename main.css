@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+body {
+	background-color: black;
+	color: #fff;
+}
+
+.glow {
+	opacity: 0.4;
+}
+
+.stream-link:hover .glow {
+	opacity: 0.8;
+}
