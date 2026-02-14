@@ -67,7 +67,18 @@ app.get("/*", async ({ path, status }) => {
 			}
 
 			return base(
-				<body class="flex h-screen w-full py-4 md:py-0 flex-col">
+				// colour mixing hell
+				// it works
+				// do not touch
+				<body class="flex h-screen w-full py-4 md:py-0 flex-col" style={{ backgroundColor: `color-mix(in hsl, ${artworks.attributes.visualMetadata.selectedPaletteColor}, #000000)` }}>
+					<div
+						style={{
+							background: `no-repeat center/125% url('${previewcover[0]}')`,
+							zIndex: -1,
+							filter: "blur(40px) brightness(25%)",
+							boxShadow: "0px 0px 100px 100px " + artworks.attributes.visualMetadata.selectedPaletteColor,
+						}}
+						class="absolute top-0 left-0 w-screen h-screen opacity-75"></div>
 					<div class="flex m-auto flex-col md:flex-row max-w-96 md:max-w-none gap-8 md:columns-2">
 						<div class="flex flex-col rounded-lg border md:min-w-96 md:w-96 w-80 min-w-80 md:h-[446px]">
 							<a href={cover[0]}>
