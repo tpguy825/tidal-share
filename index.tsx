@@ -75,21 +75,24 @@ app.get("/*", async ({ path, status }) => {
 				// it works
 				// do not touch
 				<body
-					class="flex h-screen w-full py-4 md:py-0 flex-col"
 					style={{
+						backdropFilter: "blur(40px) brightness(50%)",
+						background: `no-repeat center/cover url('${previewcover[0]}')`,
+						boxShadow: "0px 0px 100px 100px " + artworks.attributes.visualMetadata.selectedPaletteColor,
 						backgroundColor: `color-mix(in hsl, ${artworks.attributes.visualMetadata.selectedPaletteColor}, #000000)`,
-					}}>
-					<div
+					}}
+					class="min-h-screen content-center">
+					{/* <div
 						style={{
-							background: `no-repeat center/125% url('${previewcover[0]}')`,
+							background: `no-repeat center/max(100vh,100vw) url('${previewcover[0]}')`,
 							zIndex: -1,
 							filter: "blur(40px) brightness(25%)",
 							boxShadow: "0px 0px 100px 100px " + artworks.attributes.visualMetadata.selectedPaletteColor,
-							width: "100vw",
-							height: "100vh",
+							width: "100%",
+							height: "100%",
 						}}
-						class="absolute top-0 left-0 opacity-75"></div>
-					<div class="flex m-auto flex-col md:flex-row max-w-96 md:max-w-none gap-8 md:columns-2">
+						class="absolute top-0 left-0 opacity-75"></div> */}
+					<div class="flex w-fit mx-auto flex-col md:flex-row gap-8 md:columns-2 my-4">
 						<div class="flex flex-col rounded-lg border md:min-w-96 md:w-96 w-80 min-w-80 md:h-[446px]">
 							<a href={cover[0]}>
 								<img
@@ -127,7 +130,7 @@ app.get("/*", async ({ path, status }) => {
 								)}
 							</h2>
 						</div>
-						<div class="overflow-clip rounded-lg border w-full mb-4 md:h-[446px]">
+						<div class="overflow-clip rounded-lg border md:h-[446px]">
 							<h3 class="m-4 text-xl font-bold">Stream:</h3>
 							<div class="flex flex-col gap-3 mb-4">
 								<BaseStreamingService
