@@ -1,16 +1,21 @@
-import Elysia from "elysia";
+import Elysia, { file as efile } from "elysia";
 import { get, getToken } from "./tidal-share";
 import { base } from "./_utils";
 import type { IncludedAlbum, IncludedArtist, IncludedArtworks } from "./types";
 import crypto from "crypto";
+import { escapeHtml } from "@kitajs/html";
 
-// await Bun.$`bash css.sh`;
+if (process.env.NODE_ENV !== "production") {
+	await Bun.$`bash css.sh`;
+}
 
 const app = new Elysia().get("/", "Add a TIDAL song ID to the url to use this service.");
 
 async function file(path: string) {
-	const a = "./assets/" + path,
-		f = Bun.file(a),
+	const a = "./assets/" + path;
+	if (process.env.NODE_ENV !== "production")
+		return app.get(a.substring(1), () => new Response(Bun.file(a), { headers: { "Cache-Control": "no-cache" } }));
+	const f = Bun.file(a),
 		file = await f.bytes(),
 		hash = `"` + crypto.createHash("sha256").update(file).digest("base64url") + `"`;
 	app.get(a.substring(1), ({ headers, status }) => {
@@ -157,6 +162,7 @@ app.get("/*", async ({ path, status }) => {
 							<div class="flex flex-col gap-3 mb-4">
 								<BaseStreamingService
 									url={"https://tidal.com/track/" + ids[0]}
+									tidalmax={attrs.mediaTags.includes("HIRES_LOSSLESS")}
 									name="Tidal"
 									svgurl="/assets/tidal.svg"
 									shadowcolour="220,220,220"
@@ -239,11 +245,13 @@ function BaseStreamingService({
 	name,
 	svgurl,
 	shadowcolour,
+	tidalmax = false,
 }: {
 	url: string;
 	name: string;
 	svgurl: string;
 	shadowcolour: `${string},${string},${string}`;
+	tidalmax?: boolean;
 }) {
 	return (
 		<div class="overflow-clip px-4 hover:overflow-visible">
@@ -257,9 +265,14 @@ function BaseStreamingService({
 						"box-shadow: 0px 0px 56px 24px rgba(" + shadowcolour + ", 0.5); width: calc(100% - 32px);"
 					}></div>
 				<img src={svgurl} width="32" height="32" class="z-10 m-4 h-8 bg-transparent" />
-				<span class="z-10 my-auto mr-4 ml-0 h-7 text-lg font-semibold" safe>
-					{name}
-				</span>
+				<span class="z-10 my-auto mr-4 ml-0 h-7 text-lg font-semibold flex" safe>{name}</span>
+				{tidalmax ? (
+					<span class="font-bold text-sm px-1.5 py-0.5 my-auto bg-[#ffd33233] rounded-md text-[#f7d432] -ml-1">
+						MAX
+					</span>
+				) : (
+					""
+				)}
 				{rightArrow}
 			</a>
 		</div>

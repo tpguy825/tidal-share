@@ -7,7 +7,8 @@ RUN bun i
 
 COPY . /app/
 RUN bun tailwindcss -i main.css -o twout.css && bun postcss twout.css -o assets/styles.css && rm twout.css
-RUN bun build --outfile out.js --target bun index.tsx
+
+RUN bun build --outfile out.js --target --env NODE_ENV=production bun index.tsx
 
 FROM oven/bun:alpine
 
