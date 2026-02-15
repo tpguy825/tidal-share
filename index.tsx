@@ -1,14 +1,30 @@
-import Elysia, { file } from "elysia";
+import Elysia from "elysia";
 import { get, getToken } from "./tidal-share";
 import { base } from "./_utils";
 import type { IncludedAlbum, IncludedArtist, IncludedArtworks } from "./types";
+import crypto from "crypto";
 
 // await Bun.$`bash css.sh`;
 
 const app = new Elysia().get("/", "Add a TIDAL song ID to the url to use this service.");
 
-for (const f of ["styles.css", "tidal.svg", "amazon.svg", "spotify.svg", "apple.svg", "yt.svg"])
-	app.get("/assets/" + f, file("./assets/" + f));
+async function file(path: string) {
+	const a = "./assets/" + path,
+		f = Bun.file(a),
+		file = await f.bytes(),
+		hash = `"` + crypto.createHash("sha256").update(file).digest("base64url") + `"`;
+	app.get(a.substring(1), ({ headers, status }) => {
+		console.log(headers);
+		
+		if (headers["if-none-match"] && headers["if-none-match"] == hash) return status(304);
+		else return new Response(file, {
+			headers: { ETag: hash, "Content-Type": f.type, "Last-Modified": new Date(f.lastModified).toUTCString(), "Cache-Control": "max-age=3600, public, must-revalidate" },
+		});
+	});
+}
+
+await Promise.all(["styles.css", "tidal.svg", "amazon.svg", "spotify.svg", "apple.svg", "yt.svg"].map(file));
+// app.get("/assets/" + f, file("./assets/" + f));
 
 app.get("/*", async ({ path, status }) => {
 	console.log(path, path.substring(1).split("/").map(Number));
