@@ -15,11 +15,17 @@ async function file(path: string) {
 		hash = `"` + crypto.createHash("sha256").update(file).digest("base64url") + `"`;
 	app.get(a.substring(1), ({ headers, status }) => {
 		console.log(headers);
-		
+
 		if (headers["if-none-match"] && headers["if-none-match"] == hash) return status(304);
-		else return new Response(file, {
-			headers: { ETag: hash, "Content-Type": f.type, "Last-Modified": new Date(f.lastModified).toUTCString(), "Cache-Control": "max-age=3600, public, must-revalidate" },
-		});
+		else
+			return new Response(file, {
+				headers: {
+					ETag: hash,
+					"Content-Type": f.type,
+					"Last-Modified": new Date(f.lastModified).toUTCString(),
+					"Cache-Control": "max-age=14400, public, must-revalidate",
+				},
+			});
 	});
 }
 
