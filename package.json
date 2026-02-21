@@ -6,7 +6,7 @@
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
-		"@kitajs/html": "^4.2.12",
+		"@kitajs/html": "^4.2.13",
 		"@kitajs/ts-html-plugin": "^4.1.4",
 		"@tailwindcss/cli": "^4.1.18",
 		"autoprefixer": "^10.4.24",
