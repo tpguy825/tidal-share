@@ -9,7 +9,7 @@
 		"@kitajs/html": "^4.2.12",
 		"@kitajs/ts-html-plugin": "^4.1.4",
 		"@tailwindcss/cli": "^4.1.18",
-		"autoprefixer": "^10.4.24",
+		"autoprefixer": "^10.4.27",
 		"cssnano": "^7.1.2",
 		"elysia": "^1.4.25",
 		"postcss-cli": "^11.0.1",
